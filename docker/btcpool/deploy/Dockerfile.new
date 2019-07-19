@@ -1,0 +1,28 @@
+#
+# Dockerfile
+#
+# @author hanjiang.yu@bitmain.com
+# @copyright btc.com
+# @since 2018-12-01
+#
+#
+
+######### Build image #########
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE} as build
+LABEL maintainer="Hanjiang Yu <hanjiang.yu@bitmain.com>"
+
+ARG GIT_DESCRIBE=""
+ARG BUILD_JOBS=1
+ARG BUILD_TESTING=ON
+ARG BUILD_TYPE=Release
+ARG USER_DEFINED_COINBASE=OFF
+ARG USER_DEFINED_COINBASE_SIZE=10
+ARG WORK_WITH_STRATUM_SWITCHER=OFF
+
+# Copy & build btcpool
+
+COPY . /tmp/btcpool
+
+RUN cd /tmp/btcpool && ls
+

@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    hostname: zookeeper
+  kafka:
+    depends_on:
+      - zookeeper
+    image: wurstmeister/kafka
+    hostname: kafka
+    environment:
+      KAFKA_MESSAGE_MAX_BYTES: 60000000
+      KAFAK_REPLICA_FETCH_MAX_BYTES: 80000000
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  mysql:
+    build:
+      context: ../mysql
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  litecoind:
+    image: litecoind:0.16.3
+    hostname: litecoind
+    volumes:
+      - /work/litecoind:/root/.litecoin
