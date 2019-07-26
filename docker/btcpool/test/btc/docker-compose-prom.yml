@@ -1,0 +1,11 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    ports: 
+       - 9090:9090
+    volumes:
+       - /root/work/prom/prometheus-data:/prometheus-data
+       - /root/work/prom/prometheus.yml:/etc/prometheus/prometheus.yml
+
