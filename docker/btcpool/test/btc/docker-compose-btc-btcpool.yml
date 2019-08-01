@@ -1,0 +1,58 @@
+version: '3'
+services:
+  btc-gbtmaker:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- /wait-for-it.sh bitcoind:8332 -- gbtmaker -c /work/config/gbtmaker.cfg
+
+  btc-jobmaker:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- jobmaker -c /work/config/jobmaker.cfg
+
+  btc-sserver:
+    image: btccom/btcpool-btc
+    ports:
+      - 5333:3333
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- /wait-for-it.sh userlist:80 -- sserver -c /work/config/sserver.cfg
+
+  btc-sserver-simulator:
+    image: btccom/btcpool-btc
+    ports:
+      - 5334:3334
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- /wait-for-it.sh userlist:80 -- sserver -c /work/config/sserver-simulator.cfg
+
+  btc-blkmaker:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- /wait-for-it.sh bitcoind:8332 -- blkmaker -c /work/config/blkmaker.cfg
+
+  btc-statshttpd:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+    command: /wait-for-it.sh kafka:9092 -- /wait-for-it.sh mysql:3306 -- statshttpd -c /work/config/statshttpd.cfg
+
+  btc-sharelogger:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+      - btc-sharelog:/work/sharelog
+    command: /wait-for-it.sh kafka:9092 -- sharelogger -c /work/config/sharelogger.cfg
+
+  btc-slparser:
+    image: btccom/btcpool-btc
+    volumes:
+      - ./newcfg:/work/config
+      - btc-sharelog:/work/sharelog
+    command: /wait-for-it.sh mysql:3306 -- slparser -c /work/config/slparser.cfg
+
+volumes:
+  btc-sharelog: {}

@@ -1,11 +1,30 @@
 version: '3'
 services:
-  mongo:
+  rs1:
     image: mongo
-    restart: always
-    hostname: mongo
+    network_mode: "host"
     ports:
       - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root 
+    volumes:
+      - /data/mongodb/rs1:/data/db
+    command: mongod --port 27017 --dbpath /data/db --replSet mongoreplset
+  rs2:
+    image: mongo
+
+    network_mode: "host"
+    ports:
+      - 27018:27018
+
+    volumes:
+      - /data/mongodb/rs2:/data/db
+    command: mongod --port 27018 --dbpath /data/db --replSet mongoreplset
+  rs3:
+    image: mongo
+
+    network_mode: "host"
+    
+    ports:
+      - 27019:27019
+    volumes:
+      - /data/mongodb/rs3:/data/db
+    command: mongod --port 27019 --dbpath /data/db --replSet mongoreplset
